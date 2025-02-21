@@ -2,7 +2,7 @@ import socket
 
 
 class LoadBalancer:
-    """A L7 load balancer that distributes requets across multiple web servers.
+    """A L4 load balancer that distributes requets across multiple web servers.
     The LoadBalancer class implements a round robin traffic distribution
     pattern for simple evaluation of load balancing patterns.
     """
@@ -11,7 +11,7 @@ class LoadBalancer:
         self.servers = []
         self.network_listener()
 
-    def network_listener(self):
+    def setup_listener(self):
         """
         Spawns socket for IPv4 addresses using TCP
         """
@@ -21,16 +21,14 @@ class LoadBalancer:
 
         print("Load Balancer is listening on port 8080")
 
-        client_socket, address = server_socket.accept()
-        print(
-            f"Load balancer has opened a socket with source "
-            f"and destination info: {client_socket}"
-        )
-
     def add_server(self, server_address):
+        server_address.append(self.servers)
+
+    def forward_request(self, client_socket):
+        # backend = self.network_listener
         pass
 
-    def round_robin(self):
+    def run(self):
         pass
 
 
