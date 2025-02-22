@@ -20,4 +20,4 @@ def page_not_found(error):
 
 
 if __name__ == "__main__":
-    app.run(port=8000)
+    app.run(port=5050)
