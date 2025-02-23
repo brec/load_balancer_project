@@ -7,23 +7,23 @@ class LoadBalancer:
     pattern for simple evaluation of load balancing patterns.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.backend_server_endpoints = {}
-        self.upstream_listener = None
+        self.lb_socket = None
 
-    def setup_listener(self):
+    def setup_listener(self) -> None:
         """
         Spawns socket for IPv4 addresses using TCP
         """
-        self.upstream_listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.upstream_listener.bind(("localhost", 8080))
-        self.upstream_listener.listen(4)
+        self.lb_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.lb_socket.bind(("localhost", 8080))
+        self.lb_socket.listen(5)
         print("Load Balancer is listening on port 8080")
 
-    def add_server(self, server_address):
+    def add_server(self, server_address: tuple[str, int]) -> None:
         server_address.append(self.backend_server_endpoints)
 
-    def forward_request(self, client_socket):
+    def forward_request(self, client_socket: socket.socket) -> None:
         backend_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         backend_socket.connect(("localhost", 5050))
 
@@ -38,10 +38,10 @@ class LoadBalancer:
         backend_socket.close()
         client_socket.close()
 
-    def run(self):
+    def run(self) -> None:
         self.setup_listener()
         while True:
-            client_socket, address = self.upstream_listener.accept()
+            client_socket, address = self.lb_socket.accept()
             print(f"Connection from {address}")
             self.forward_request(client_socket)
 
