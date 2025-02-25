@@ -44,8 +44,3 @@ class LoadBalancer:
             client_socket, address = self.lb_socket.accept()
             print(f"Connection from {address}")
             self.forward_request(client_socket)
-
-
-if __name__ == "__main__":
-    lb = LoadBalancer()
-    lb.run()
