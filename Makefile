@@ -1,26 +1,49 @@
-SHELL := /bin/bash
+SHELL := /bin/zsh
 
-VENV := .VENV
+VENV := .venv
 
-PYTHON := python3
+PYTHON := python
+PIP := $(VENV)/bin/pip
 
-.PHONY: venv install dev-install pre-commit
+.PHONY: all
+all: help
 
+# Show helpful usage info
+.PHONY: help
+help:
+	@echo "Common make targets:"
+	@echo "  make venv        Create/upgrade the virtual environment"
+	@echo "  make install     Install dependencies from requirements.txt"
+	@echo "  make dev-install Install dev/testing deps from requirements-dev.txt"
+	@echo "  make pre-commit  Run pre-commit checks on all files"
+	@echo "  make clean       Remove venv and any __pycache__ directories"
+
+.PHONY: venv
 venv:
 	@if [ ! -d "$(VENV)" ]; then \
+		echo "Creating virtual environment in $(VENV)"; \
 		$(PYTHON) -m venv $(VENV); \
-		echo "Virtual environment created in $(VENV)"; \
-	else \
-		echo "Virtual environment already exists in $(VENV)"; \
 	fi
+	@echo "Upgrading pip in $(VENV)..."
+	@$(PIP) install --upgrade pip
 
+.PHONY: install
 install: venv
-	. $(VENV)/bin/activate && pip install --upgrade pip
-	. $(VENV)/bin/activate && pip install -r requirements.txt
+	@echo "Installing dependencies..."
+	@$(PIP) install -r requirements.txt
 
-dev-install: venv
-	. $(VENV)/bin/activate && pip install --upgrade pip
-	. $(VENV)/bin/activate && pip install -r requirements-dev.txt
+.PHONY: dev-install
+dev-install: install
+	@echo "Installing dev/test dependencies..."
+	@$(PIP) install -r requirements-dev.txt
 
-pre-commit:
-	. $(VENV)/bin/activate && pre-commit run --all-files
+.PHONY: pre-commit
+pre-commit: venv
+	@pre-commit run --all-files
+
+.PHONY: clean
+clean:
+	@echo "Removing virtual environment and __pycache__..."
+	rm -rf $(VENV)
+	find . -type d -name "__pycache__" -exec rm -rf {} +
+
