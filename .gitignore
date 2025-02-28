@@ -1,4 +1,6 @@
 __pycache__
-.venv/, venv/
-.vscode/ .idea/
+.venv/
+venv/
+.vscode/
+.idea/
 .flake8
