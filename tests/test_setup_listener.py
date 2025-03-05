@@ -1,17 +1,16 @@
 import socket
 import pytest
 from unittest.mock import patch
-from load_balancer import setup_listener
+from b_load_balancer import LoadBalancer
 
 
 def test_setup_listener():
     with patch("socket.socket") as mock_socket:
-        lb = YourClass()
+        mock_instance = mock_socket.return_value
+
+        lb = LoadBalancer()
         lb.setup_listener()
 
-        assert mock_instance.bind.called
-        assert mock_instance.listen.called
-
+        mock_instance.bind.assert_called_with(("localhost", 8080))
+        mock_instance.listen.assert_called_with(5)
         assert lb.lb_socket == mock_instance
-
-    assert setup_listener()

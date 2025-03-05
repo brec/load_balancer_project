@@ -21,7 +21,7 @@ class LoadBalancer:
         print("Load Balancer is listening on port 8080")
 
     def add_server(self, server_address: tuple[str, int]) -> None:
-        server_address.append(self.backend_server_endpoints)
+        self.backend_server_endpoints.append(server_address)
 
     def forward_request(self, client_socket: socket.socket) -> None:
         backend_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
